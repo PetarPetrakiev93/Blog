@@ -33,7 +33,7 @@
     {
         <tr>
             <td>
-                @item.Title
+                @Html.ActionLink(@item.Title, "Details", "Images", new { @id = item.Id}, null)
             </td>
             <td style="width: 500px;">
                 @item.Contents

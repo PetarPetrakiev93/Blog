@@ -1,0 +1,39 @@
+﻿@model Blog.Models.Images
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="container">
+    <div class="well">
+     <article>
+         <header>
+             <h3>
+                 @Model.Title
+             </h3>
+         </header>
+         <h4>
+             @Model.Contents
+         </h4>
+         <h5>
+             @Model.Description
+         </h5>
+         <div>
+             <img src="/Images/RetrieveImage/@Model.Id" alt="" height="400" />
+         </div>
+         <small class="author">
+             --author @Model.Author.FullName
+         </small>
+         <footer class="pull-right">
+             @if (User.IsInRole("Admin") || Model.IsAuthor(User.Identity.Name))
+             {
+                @Html.ActionLink("Edit", "Edit", "Images", new { @id = Model.Id }, new { @class = "btn btn-success btn-xs" })
+                @Html.ActionLink("Delete", "Delete", "Images", new { @id = Model.Id }, new { @class = "btn btn-danger btn-xs" })
+                
+             }
+             @Html.ActionLink("Back", "List", "Images", null, new { @class = "btn btn-default btn-xs" })
+         </footer>
+
+     </article>
+</div>
+</div>
+<hr />

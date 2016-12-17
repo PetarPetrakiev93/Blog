@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -11,12 +12,14 @@ namespace Blog.Controllers
     public class ImagesController : Controller
     {
         [HttpGet]
+        [Authorize]
         public ActionResult Create()
         {
             return View();
         }
         [Route("Create")]
         [HttpPost]
+        [Authorize]
         public ActionResult Create(Images model)
         {
             HttpPostedFileBase file = Request.Files["ImageData"];
@@ -74,6 +77,122 @@ namespace Blog.Controllers
             return cover;
         }
 
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            using (var database = new BlogDbContext())
+            {
+                var imageDetails = database.Images.Where(i => i.Id == id).Include(i => i.Author).First();
+                if (imageDetails == null)
+                {
+                    return HttpNotFound();
+                }
 
+                return View(imageDetails);
+            }
+        }
+
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            using (var database = new BlogDbContext())
+            {
+                var imageDetails = database.Images.Where(i => i.Id == id).Include(i => i.Author).First();
+                if (!IsUserAuthorizedToEdit(imageDetails))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                }
+                if (imageDetails == null)
+                {
+                    return HttpNotFound();
+                }
+
+                return View(imageDetails);
+            }
+        }
+        [HttpPost]
+        [ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            using (var database = new BlogDbContext())
+            {
+                var imageDetails = database.Images.Where(i => i.Id == id).Include(i => i.Author).First();
+                if (imageDetails == null)
+                {
+                    return HttpNotFound();
+                }
+                database.Images.Remove(imageDetails);
+                database.SaveChanges();
+
+                return RedirectToAction("List");
+            }
+        }
+
+        public ActionResult Edit(int? id)
+        {
+            if(id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            using (var database = new BlogDbContext())
+            {
+                var image = database.Images.Where(i => i.Id == id).First();
+                if (!IsUserAuthorizedToEdit(image))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                }
+                if (image == null)
+                {
+                    return HttpNotFound();
+                }
+                var model = new ImagesViewModel();
+                model.Id = image.Id;
+                model.Title = image.Title;
+                model.Contents = image.Contents;
+                model.Description = image.Description;
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Edit(ImagesViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var database = new BlogDbContext())
+                {
+                    var image = database.Images.FirstOrDefault(i => i.Id == model.Id);
+
+                    image.Title = model.Title;
+                    image.Contents = model.Contents;
+                    image.Description = model.Description;
+
+                    database.Entry(image).State = EntityState.Modified;
+                    database.SaveChanges();
+
+                    return RedirectToAction("List");
+                }
+            }
+            return View(model);
+        }
+
+        private bool IsUserAuthorizedToEdit(Images image)
+        {
+            bool isAdmin = this.User.IsInRole("Admin");
+            bool isAuthor = image.IsAuthor(this.User.Identity.Name);
+
+            return isAdmin || isAuthor;
+        }
     }
 }

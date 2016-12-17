@@ -14,7 +14,7 @@ namespace Blog.Models
         [Key]
         public int Id { get; set; }
 
-        
+        [Required]
         public string Title { get; set; }
 
         public string Description { get; set; }
@@ -55,6 +55,11 @@ namespace Blog.Models
             BinaryReader reader = new BinaryReader(image.InputStream);
             imageBytes = reader.ReadBytes((int)image.ContentLength);
             return imageBytes;
+        }
+
+        public bool IsAuthor (string name)
+        {
+            return this.Author.UserName.Equals(name);
         }
     }
 }
