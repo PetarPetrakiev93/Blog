@@ -22,6 +22,12 @@
             </p>
             </div>
             <div class="form-group">
+                @Html.Label("Album", new { @class = "control-label col-sm-4" })
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(m => m.Albums.Name, new { @class = "form-control", @readonly = "readonly" })
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-4">
                     @Html.ActionLink("Cancel", "List", "Images", null, new { @class = "btn btn-default" })
                     <input type="submit" value="Delete" class="btn btn-danger" />

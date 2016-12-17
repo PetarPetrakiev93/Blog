@@ -33,6 +33,14 @@
                     @Html.TextAreaFor(m => m.Contents, new { @class = "form-control", @rows = "7" })
                 </div>
             </div>
+            <div class="form-group">
+                @Html.Label("Album", new { @class = "col-sm-4 control-label" })
+                <div class="dropdown col-sm-4">
+                    @Html.DropDownListFor(m => m.AlbumId,
+                    new SelectList(Model.Albums, "Id", "Name"),
+                    new { @class = "btn btn-info col-sm-12" })
+                </div>
+            </div>
 
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-4">

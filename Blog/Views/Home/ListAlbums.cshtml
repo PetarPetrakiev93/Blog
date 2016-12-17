@@ -1,0 +1,24 @@
+﻿@model List<Blog.Models.Album>
+
+@{
+    ViewBag.Title = "List";
+}
+
+<div class="container">
+    <div class="row">
+        @foreach (var album in Model)
+        {
+            <div class="col-sm-6 text-center text-uppercase">
+                <p>
+                    <h2>
+                        @Html.ActionLink(string.Format($"{album.Name} ({album.Images.Count})"),
+                        "ListImages", "Home", new { @albumId = album.Id }, null)
+                </h2>
+            </p>
+        </div>
+        }
+    </div>
+</div>
+<hr />
+
+

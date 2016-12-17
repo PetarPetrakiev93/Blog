@@ -15,23 +15,29 @@ namespace Blog.Controllers
         [Authorize]
         public ActionResult Create()
         {
-            return View();
+            using (var database = new BlogDbContext())
+            {
+                var model = new ImagesViewModel();
+                model.Albums = database.Albums.OrderBy(a => a.Name).ToList();
+                return View(model);
+            }
+                
         }
         [Route("Create")]
         [HttpPost]
         [Authorize]
-        public ActionResult Create(Images model)
+        public ActionResult Create(ImagesViewModel model)
         {
             HttpPostedFileBase file = Request.Files["ImageData"];
-            Images service = new Images();
+            ImagesViewModel service = new ImagesViewModel();
             int i = service.UploadImageInDataBase(file, model);
             if (i == 1)
             {
                 using (var database = new BlogDbContext())
                 {
                     var authorId = database.Users.Where(u => u.UserName == this.User.Identity.Name).First().Id;
-                    model.AuthorId = authorId;
-                    database.Images.Add(model);
+                    var image = new Images(authorId, model.Title, model.Description, model.Contents, model.Image, model.AlbumId);
+                    database.Images.Add(image);
                     database.SaveChanges();
 
                     return RedirectToAction("List");
@@ -103,7 +109,7 @@ namespace Blog.Controllers
             }
             using (var database = new BlogDbContext())
             {
-                var imageDetails = database.Images.Where(i => i.Id == id).Include(i => i.Author).First();
+                var imageDetails = database.Images.Where(i => i.Id == id).Include(i => i.Author).Include(i =>i.Albums).First();
                 if (!IsUserAuthorizedToEdit(imageDetails))
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
@@ -160,6 +166,8 @@ namespace Blog.Controllers
                 model.Title = image.Title;
                 model.Contents = image.Contents;
                 model.Description = image.Description;
+                model.AlbumId = image.AlbumId;
+                model.Albums = database.Albums.OrderBy(a => a.Name).ToList();
 
                 return View(model);
             }
@@ -177,6 +185,7 @@ namespace Blog.Controllers
                     image.Title = model.Title;
                     image.Contents = model.Contents;
                     image.Description = model.Description;
+                    image.AlbumId = model.AlbumId;
 
                     database.Entry(image).State = EntityState.Modified;
                     database.SaveChanges();

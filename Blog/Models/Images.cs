@@ -11,6 +11,19 @@ namespace Blog.Models
 {
     public class Images
     {
+        public Images()
+        {
+
+        }
+        public Images(string authorId, string title, string description, string contents, byte[] image, int albumId)
+        {
+            this.AuthorId = authorId;
+            this.Title = title;
+            this.Description = description;
+            this.Contents = contents;
+            this.Image = image;
+            this.AlbumId = albumId;
+        }
         [Key]
         public int Id { get; set; }
 
@@ -30,32 +43,12 @@ namespace Blog.Models
 
         public virtual ApplicationUser Author { get; set; }
 
-        private readonly BlogDbContext db = new BlogDbContext();
-        public int UploadImageInDataBase(HttpPostedFileBase file, Images contentViewModel)
-        {
-            contentViewModel.Image = ConvertToBytes(file);
+        [ForeignKey("Albums")]
+        public int AlbumId { get; set; }
 
-            var Content = new Images
-            {
-                Title = contentViewModel.Title,
-                Description = contentViewModel.Description,
-                Contents = contentViewModel.Contents,
-                Image = contentViewModel.Image,
-                
-            };
-            
-            
-            db.Images.Add(Content);
+        public virtual Album Albums { get; set; }
 
-            return 1;
-        }
-        public byte[] ConvertToBytes(HttpPostedFileBase image)
-        {
-            byte[] imageBytes = null;
-            BinaryReader reader = new BinaryReader(image.InputStream);
-            imageBytes = reader.ReadBytes((int)image.ContentLength);
-            return imageBytes;
-        }
+        
 
         public bool IsAuthor (string name)
         {

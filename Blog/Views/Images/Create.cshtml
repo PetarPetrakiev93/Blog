@@ -1,4 +1,4 @@
-﻿@model Blog.Models.Images
+﻿@model Blog.Models.ImagesViewModel
 @{
     ViewBag.Title = "Create";
 }
@@ -55,6 +55,14 @@
             <div class="col-md-10">
                 @Html.TextAreaFor(model => model.Contents, new { @class = "form-control", placeholder = "Content" })
                 @Html.ValidationMessageFor(model => model.Contents)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Album", new { @class = "col-md-2 control-label"})
+            <div class="dropdown col-md-2">
+                @Html.DropDownListFor(m => m.AlbumId,
+                    new SelectList(Model.Albums, "Id", "Name"),
+                    new { @class = "btn btn-info col-sm-12"})
             </div>
         </div>
         <div class="form-group">

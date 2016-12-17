@@ -16,6 +16,7 @@ namespace Blog.Models
         }
         public virtual IDbSet<Images> Images { get; set; }
 
+        public virtual IDbSet<Album> Albums { get; set; }
 
         public static BlogDbContext Create()
         {
