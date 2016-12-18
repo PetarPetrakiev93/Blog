@@ -30,6 +30,8 @@ namespace Blog.Models
 
         public ICollection<Album> Albums { get; set; }
 
+        public string Tags { get; set; }
+
         private readonly BlogDbContext db = new BlogDbContext();
         public int UploadImageInDataBase(HttpPostedFileBase file, ImagesViewModel contentViewModel)
         {

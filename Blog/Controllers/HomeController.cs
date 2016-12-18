@@ -34,7 +34,7 @@ namespace Blog.Controllers
 
             using (var database = new BlogDbContext())
             {
-                var images = database.Images.Where(a => a.AlbumId == albumId).Include(a => a.Author).ToList();
+                var images = database.Images.Where(a => a.AlbumId == albumId).Include(a => a.Author).Include(i => i.Tags).ToList();
 
                 return View(images);
             }

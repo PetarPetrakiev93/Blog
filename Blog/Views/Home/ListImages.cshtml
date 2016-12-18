@@ -25,6 +25,9 @@
             <b>Description</b>
         </th>
         <th>
+            <b>Tags</b>
+        </th>
+        <th>
             <b>Author</b>
         </th>
     </tr>
@@ -43,6 +46,12 @@
             </td>
             <td>
                 @item.Description
+            </td>
+            <td>
+                @foreach (var tag in item.Tags)
+                {
+                    @Html.ActionLink("#" + tag.Name, "List", "Tag", new { @id = tag.Id }, new { @class = "btn btn-default btn-xs" })
+                }
             </td>
             <td>
                 @item.Author.FullName

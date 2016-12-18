@@ -37,6 +37,7 @@ namespace Blog.Controllers
                 {
                     var authorId = database.Users.Where(u => u.UserName == this.User.Identity.Name).First().Id;
                     var image = new Images(authorId, model.Title, model.Description, model.Contents, model.Image, model.AlbumId);
+                    this.SetImageTags(image, model, database);
                     database.Images.Add(image);
                     database.SaveChanges();
 
@@ -56,7 +57,7 @@ namespace Blog.Controllers
         {
             using (var database = new BlogDbContext())
             {
-                var content = database.Images.Include(a => a.Author).ToList();
+                var content = database.Images.Include(a => a.Author).Include(i => i.Tags).ToList();
                 return View(content);                
             }
                 
@@ -91,7 +92,7 @@ namespace Blog.Controllers
             }
             using (var database = new BlogDbContext())
             {
-                var imageDetails = database.Images.Where(i => i.Id == id).Include(i => i.Author).First();
+                var imageDetails = database.Images.Where(i => i.Id == id).Include(i => i.Author).Include(i => i.Tags).First();
                 if (imageDetails == null)
                 {
                     return HttpNotFound();
@@ -114,6 +115,7 @@ namespace Blog.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
                 }
+                ViewBag.TagsString = string.Join(", ", imageDetails.Tags.Select(t => t.Name));
                 if (imageDetails == null)
                 {
                     return HttpNotFound();
@@ -168,7 +170,7 @@ namespace Blog.Controllers
                 model.Description = image.Description;
                 model.AlbumId = image.AlbumId;
                 model.Albums = database.Albums.OrderBy(a => a.Name).ToList();
-
+                model.Tags = string.Join(", ", image.Tags.Select(t => t.Name));
                 return View(model);
             }
         }
@@ -186,6 +188,7 @@ namespace Blog.Controllers
                     image.Contents = model.Contents;
                     image.Description = model.Description;
                     image.AlbumId = model.AlbumId;
+                    this.SetImageTags(image, model, database);
 
                     database.Entry(image).State = EntityState.Modified;
                     database.SaveChanges();
@@ -194,6 +197,24 @@ namespace Blog.Controllers
                 }
             }
             return View(model);
+        }
+
+        private void SetImageTags(Images image, ImagesViewModel model, BlogDbContext database)
+        {
+            var tagsString = model.Tags.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(t => t.ToLower()).Distinct();
+            image.Tags.Clear();
+            foreach (var tagString in tagsString)
+            {
+                Tag tag = database.Tags.FirstOrDefault(t => t.Name.Equals(tagString));
+
+                if (tag == null)
+                {
+                    tag = new Tag() { Name = tagString };
+                    database.Tags.Add(tag);
+
+                    image.Tags.Add(tag);
+                }
+            }
         }
 
         private bool IsUserAuthorizedToEdit(Images image)
