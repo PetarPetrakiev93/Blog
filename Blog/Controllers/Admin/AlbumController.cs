@@ -113,6 +113,11 @@ namespace Blog.Controllers.Admin
 
                 foreach (var image in albumImages)
                 {
+                    var comments = image.Comments.ToList();
+                    foreach(var comment in comments)
+                    {
+                        database.Comments.Remove(comment);
+                    }
                     database.Images.Remove(image);
                 }
 

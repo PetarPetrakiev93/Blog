@@ -197,6 +197,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Admin\AlbumController.cs" />
+    <Compile Include="Controllers\Admin\CommentController.cs" />
     <Compile Include="Controllers\Admin\UserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImagesController.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\EditUserViewModel.cs" />
     <Compile Include="Models\ImagesViewModel.cs" />
     <Compile Include="Models\BlogDbContext.cs" />
@@ -288,6 +290,10 @@
     <Content Include="Views\Home\ListImages.cshtml" />
     <Content Include="Views\Home\ListAlbums.cshtml" />
     <Content Include="Views\Tag\List.cshtml" />
+    <Content Include="Views\Images\_Comment.cshtml" />
+    <Content Include="Views\Images\_CommentCreate.cshtml" />
+    <Content Include="Views\Comment\Delete.cshtml" />
+    <Content Include="Views\Comment\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

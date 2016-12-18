@@ -111,6 +111,7 @@ namespace Blog.Controllers
             using (var database = new BlogDbContext())
             {
                 var imageDetails = database.Images.Where(i => i.Id == id).Include(i => i.Author).Include(i =>i.Albums).First();
+
                 if (!IsUserAuthorizedToEdit(imageDetails))
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
@@ -135,6 +136,11 @@ namespace Blog.Controllers
             using (var database = new BlogDbContext())
             {
                 var imageDetails = database.Images.Where(i => i.Id == id).Include(i => i.Author).First();
+                var comments = imageDetails.Comments.ToList();
+                foreach (var comment in comments)
+                {
+                    database.Comments.Remove(comment);
+                }
                 if (imageDetails == null)
                 {
                     return HttpNotFound();
@@ -224,5 +230,36 @@ namespace Blog.Controllers
 
             return isAdmin || isAuthor;
         }
+
+        public ActionResult _Comment(int? id)
+        {
+            using (var database = new BlogDbContext())
+            {
+                var comment = database.Comments.Where(c => c.ImageId == id).ToList();
+
+                return View(comment);
+            }
+        }
+
+        public ActionResult _CommentCreate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult _CommentCreate(Comment comment, int id)
+        {
+            using (var database = new BlogDbContext())
+            {
+                comment.ImageId = id;
+                comment.Time = DateTime.Now.ToString();
+                database.Comments.Add(comment);
+                database.SaveChanges();
+
+                return RedirectToAction("List");
+            }
+
+        }
+        
     }
 }

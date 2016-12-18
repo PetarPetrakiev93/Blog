@@ -30,7 +30,12 @@
          <h3 class="author">
              --author @Model.Author.FullName
          </h3>
-             
+             <div>
+                 @Html.ActionLink("View Comments", "_Comment", "Images", new { @id = Model.Id }, new { @class = "btn btn-success btn-xs" })
+             </div>
+         <div>
+             @Html.ActionLink("Add Comments", "_CommentCreate", "Images", new { @id = Model.Id }, new { @class = "btn btn-success btn-xs" })
+         </div>
          <footer class="pull-right">
              @if (User.IsInRole("Admin") || Model.IsAuthor(User.Identity.Name))
              {

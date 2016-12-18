@@ -13,9 +13,12 @@ namespace Blog.Models
     {
         private ICollection<Tag> tags;
 
+        private ICollection<Comment> comments;
+
         public Images()
         {
             this.tags = new HashSet<Tag>();
+            this.comments = new HashSet<Comment>();
         }
         public Images(string authorId, string title, string description, string contents, byte[] image, int albumId)
         {
@@ -56,6 +59,8 @@ namespace Blog.Models
             get { return this.tags; }
             set { this.tags = value; }
         }
+
+        public virtual ICollection<Comment> Comments { get; set; }
 
         public bool IsAuthor (string name)
         {

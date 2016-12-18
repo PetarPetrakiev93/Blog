@@ -179,6 +179,11 @@ namespace Blog.Controllers.Admin
                 var userImages  = database.Images.Where(a => a.Author.Id == user.Id);
                 foreach (var article in userImages)
                 {
+                    var comments = article.Comments.ToList();
+                    foreach(var comment in comments)
+                    {
+                        database.Comments.Remove(comment);
+                    }
                     database.Images.Remove(article);
                 }
                 database.Users.Remove(user);

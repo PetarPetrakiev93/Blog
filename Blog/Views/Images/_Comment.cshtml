@@ -1,0 +1,21 @@
+﻿@model List<Blog.Models.Comment>
+
+<div class="container">
+    <div class="row">
+        @foreach (var comment in Model)
+        {
+            <div class="col-sm-6">
+                <h3>
+                    @comment.Name
+                </h3>
+                <h3>
+                    @comment.Content
+                </h3>
+                <h3>
+                    @comment.Time
+                </h3>
+            </div>
+        }
+
+    </div>
+</div>
