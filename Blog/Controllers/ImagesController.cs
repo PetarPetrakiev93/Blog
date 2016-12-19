@@ -217,9 +217,9 @@ namespace Blog.Controllers
                 {
                     tag = new Tag() { Name = tagString };
                     database.Tags.Add(tag);
-
-                    image.Tags.Add(tag);
+                                        
                 }
+                image.Tags.Add(tag);
             }
         }
 
