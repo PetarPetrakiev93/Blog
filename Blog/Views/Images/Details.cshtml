@@ -2,51 +2,64 @@
 @{
     ViewBag.Title = "Details";
 }
+<style>
+    .card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
 
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+.container {
+    padding: 2px 16px;
+}
+</style>
 <div class="container">
     <div class="well">
-     <article>
-         <header>
-             <h3>
-                 @Model.Title
-             </h3>
-         </header>
-         <h4>
-             @Model.Contents
-         </h4>
-         <h5>
-             @Model.Description
-         </h5>
-         <div>
-             <img src="/Images/RetrieveImage/@Model.Id" alt="" height="400" />
-         </div>
-         <div class="pull-left">
-             @foreach (var tag in Model.Tags)
-             {
-                 @Html.ActionLink("#" + tag.Name, "List", "Tag", new { @id = tag.Id }, new { @class = "btn btn-default btn-xs" })
-             }
-         </div>
-         
-         <h3 class="author">
-             --author @Model.Author.FullName
-         </h3>
-             <div>
-                 @Html.ActionLink("View Comments", "_Comment", "Images", new { @id = Model.Id }, new { @class = "btn btn-success btn-xs" })
-             </div>
-         <div>
-             @Html.ActionLink("Add Comments", "_CommentCreate", "Images", new { @id = Model.Id }, new { @class = "btn btn-success btn-xs" })
-         </div>
-         <footer class="pull-right">
-             @if (User.IsInRole("Admin") || Model.IsAuthor(User.Identity.Name))
-             {
-                @Html.ActionLink("Edit", "Edit", "Images", new { @id = Model.Id }, new { @class = "btn btn-success btn-xs" })
-                @Html.ActionLink("Delete", "Delete", "Images", new { @id = Model.Id }, new { @class = "btn btn-danger btn-xs" })
+        <article>
+            <center>
+                <div class="card">
+                    <img src="/Images/RetrieveImage/@Model.Id" alt="Avatar" style="width:100%">
+                    <div class="container">
+                        <h4><b>@Model.Title</b></h4>
+                        <p>@Model.Contents</p>
+                        <p>@Model.Description</p>
+                    </div>
+                </div>
+              
+            </center>
+            <div>
+                @foreach (var tag in Model.Tags)
+                {
+                    @Html.ActionLink("#" + tag.Name, "List", "Tag", new { @id = tag.Id }, new { @class = "btn btn-default btn-xs" })
+                }
+            </div>
                 
-             }
-             @Html.ActionLink("Back", "List", "Images", null, new { @class = "btn btn-default btn-xs" })
-         </footer>
+            <h3 class="pull-right">
+                Uploader: @Model.Author.FullName
+            </h3>
+            <div>
+                @Html.ActionLink("View Comments", "_Comment", "Images", new { @id = Model.Id }, new { @class = "btn btn-success btn-xs" })
+                @Html.ActionLink("Add Comments", "_CommentCreate", "Images", new { @id = Model.Id }, new { @class = "btn btn-success btn-xs" })
+            </div>
 
-     </article>
+            <footer class="pull-right author">
+                @if (User.IsInRole("Admin") || Model.IsAuthor(User.Identity.Name))
+                {
+                    @Html.ActionLink("Edit", "Edit", "Images", new { @id = Model.Id }, new { @class = "btn btn-success btn-xs" })
+                    @Html.ActionLink("Delete", "Delete", "Images", new { @id = Model.Id }, new { @class = "btn btn-danger btn-xs" })
+
+                }
+                @Html.ActionLink("Back", "List", "Images", null, new { @class = "btn btn-default btn-xs" })
+            </footer>
+
+        </article>
+    </div>
 </div>
-</div>
+
 <hr />

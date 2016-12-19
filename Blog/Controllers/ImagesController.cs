@@ -256,7 +256,7 @@ namespace Blog.Controllers
                 database.Comments.Add(comment);
                 database.SaveChanges();
 
-                return RedirectToAction("List");
+                return RedirectToAction("_Comment", new { id = comment.ImageId });
             }
 
         }
