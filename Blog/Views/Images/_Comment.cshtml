@@ -21,8 +21,10 @@
             </div>
         }
         <div>
-            @Html.ActionLink("Add Comments", "_CommentCreate", "Images", new { @id = Model.Select(i => i.ImageId).First().ToString() }, new { @class = "btn btn-success btn-xs" })
-            @Html.ActionLink("Back", "Details", "Images", new { @id = Model.Select(i => i.ImageId).First().ToString() }, new { @class = "btn btn-default btn-xs" })
+            
+                
+                @Html.ActionLink("Back", "List", "Images", null, new { @class = "btn btn-default btn-xs" })
+            
         </div>
     </div>
 </div>
