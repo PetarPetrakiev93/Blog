@@ -177,13 +177,10 @@ namespace Blog.Controllers.Admin
             {
                 var user = database.Users.Where(u => u.Id.Equals(id)).First();
                 var userImages  = database.Images.Where(a => a.Author.Id == user.Id);
+                
                 foreach (var article in userImages)
                 {
-                    var comments = article.Comments.ToList();
-                    foreach(var comment in comments)
-                    {
-                        database.Comments.Remove(comment);
-                    }
+                    
                     database.Images.Remove(article);
                 }
                 database.Users.Remove(user);
